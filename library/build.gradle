@@ -1,0 +1,83 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.android["compileSdkVersion"]
+    defaultConfig {
+        minSdkVersion rootProject.ext.android["minSdkVersion"]
+        targetSdkVersion rootProject.ext.android["targetSdkVersion"]
+        versionCode rootProject.ext.android["versionCode"]
+        versionName rootProject.ext.android["versionName"]
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    //jdk1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
+    lintOptions {
+        abortOnError false
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    //api rootProject.ext.dependencies["appcompat-v7"]
+    api(rootProject.ext.dependencies["appcompat-v7"]) {
+        exclude module: "support-v4"
+        exclude module: "support-annotations"
+    }
+    api rootProject.ext.dependencies["design"]
+    api rootProject.ext.dependencies["dynamic"]
+    api rootProject.ext.dependencies["palette"]
+    api rootProject.ext.dependencies["cardview-v7"]
+    api rootProject.ext.dependencies["support-v4"]
+    api rootProject.ext.dependencies["annotations"]
+    api rootProject.ext.dependencies["recyclerview"]
+    api rootProject.ext.dependencies["constraint-layout"]
+    api rootProject.ext.dependencies["percent"]
+    api rootProject.ext.dependencies["multidex"]
+
+
+    api rootProject.ext.dependencies["logging-interceptor"]
+    api rootProject.ext.dependencies["okhttp"]
+    api rootProject.ext.dependencies["retrofit"]
+    api rootProject.ext.dependencies["retrofit-converter-gson"]
+    api rootProject.ext.dependencies["retrofit-adapter-rxjava2"]
+    api rootProject.ext.dependencies["rxrelay"]
+    api rootProject.ext.dependencies["rxandroid2"]
+    api rootProject.ext.dependencies["rxjava2"]
+    api rootProject.ext.dependencies["router"]
+
+    //由于项目在早期用rx 1.x版本，后期组件化更改内容太多，固后期将rx2替换rx1
+    api rootProject.ext.dependencies["retrofit-adapter-rxjava"]
+    api rootProject.ext.dependencies["rxandroid"]
+    api rootProject.ext.dependencies["rxjava"]
+
+    api rootProject.ext.dependencies["glide"]
+    api(rootProject.ext.dependencies["glide-transformations"]) {
+        exclude module: 'glide'
+    }
+
+    api rootProject.ext.dependencies["utilcode"]
+}

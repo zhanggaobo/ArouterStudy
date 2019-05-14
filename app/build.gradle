@@ -1,0 +1,70 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.android["compileSdkVersion"]
+    defaultConfig {
+        applicationId "com.gary.arouterstudy"
+        minSdkVersion rootProject.ext.android["minSdkVersion"]
+        targetSdkVersion rootProject.ext.android["targetSdkVersion"]
+        versionCode rootProject.ext.android["versionCode"]
+        versionName rootProject.ext.android["versionName"]
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        //配置阿里ARouter路由
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+//        ndk {
+//            abiFilters "armeabi", "armeabi-v7a" //, "x86", "mips"
+//        }
+        // 64k
+        multiDexEnabled true
+        // 支持模糊视图
+        renderscriptSupportModeEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    //jdk1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
+    //避免项目中存在相同的jar包，导致运行失败
+    dexOptions {
+        preDexLibraries = false
+    }
+
+    //出现错误的原因是：AndroidStudio严格审查png图片，就是png没有达到AndroidStudio的要求
+    //注：最重要的就是.9图要严格要求做好。禁止Gradle检查PNG的合法性
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
+
+    //统一资源前缀，规范资源引用
+    resourcePrefix "app_"
+    dataBinding {
+        enabled true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation('com.alibaba.android:vlayout:1.2.2@aar') {
+//        transitive = true
+//    }
+    implementation project(':library')
+    if (!rootProject.ext.isCircleApplication) {
+        implementation project(':module_circle')
+    }
+    if (!rootProject.ext.isNewsApplication) {
+        implementation project(':module_news')
+    }
+}
